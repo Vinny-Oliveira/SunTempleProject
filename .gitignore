@@ -72,3 +72,10 @@ Plugins/*/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+# Large files
+Content/InfinityBladeAdversaries/*
+Content/InfinityBladeEffects/*
+Content/InfinityBladeGrassLands/*
+Content/InfinityBladeWeapons/*
+Content/ParagonMinions/*
