@@ -25,6 +25,9 @@ class PROJECT_01_API AWeapon : public AItem
 public:
 	AWeapon();
 
+	UPROPERTY(EditDefaultsOnly, Category = "SaveData")
+	FString Name{};
+
 #pragma region PHYSICS_COMPONENTS
 	/** Skeletal mesh of the weapon */
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SkeletalMesh")
