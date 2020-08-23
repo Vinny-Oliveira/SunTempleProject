@@ -16,6 +16,7 @@
 #include "Enemy.h"
 #include "MainPlayerController.h"
 #include "SaveGameProj01.h"
+#include "ItemStorage.h"
 
 // Sets default values
 AMain::AMain()
@@ -474,6 +475,11 @@ void AMain::SaveGame() {
 	SaveGameInstance->CharacterStats.Location = GetActorLocation();
 	SaveGameInstance->CharacterStats.Rotation = GetActorRotation();
 
+	// Save the equipped weapon
+	if (EquippedWeapon) {
+		SaveGameInstance->CharacterStats.WeaponName = EquippedWeapon->Name;
+	}
+
 	// Save the information to a save slot
 	UGameplayStatics::SaveGameToSlot(SaveGameInstance, SaveGameInstance->PlayerName, SaveGameInstance->UserIndex);
 }
@@ -497,6 +503,23 @@ void AMain::LoadGame(bool CanSetPosition) {
 	if (CanSetPosition) {
 		SetActorLocation(LoadGameInstance->CharacterStats.Location);
 		SetActorRotation(LoadGameInstance->CharacterStats.Rotation);
+	}
+
+	// Spawn and equip the loaded weapon
+	if (WeaponStorage) {
+		AItemStorage* Weapons = GetWorld()->SpawnActor<AItemStorage>(WeaponStorage);
+		if (Weapons) {
+			FString WeaponName{ LoadGameInstance->CharacterStats.WeaponName };
+
+			// Only equip the weapon if it exists in the storage
+			if (Weapons->WeaponMap.Contains(WeaponName)) {
+				AWeapon* WeaponToEquip{ GetWorld()->SpawnActor<AWeapon>(Weapons->WeaponMap[WeaponName]) };
+				if (WeaponToEquip) {
+					WeaponToEquip->Equip(this);
+				}
+			}
+
+		}
 	}
 }
 

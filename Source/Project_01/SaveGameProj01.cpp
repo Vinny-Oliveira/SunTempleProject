@@ -5,5 +5,5 @@
 
 USaveGameProj01::USaveGameProj01()
 	: PlayerName{ TEXT("Default") }, UserIndex{ 0 } {
-
+	CharacterStats.WeaponName = TEXT("");
 }
