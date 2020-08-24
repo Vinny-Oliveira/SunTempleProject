@@ -73,7 +73,7 @@ private:
 	/// </summary>
 	/// <param name="Widget"></param>
 	/// <param name="UserWidget"></param>
-	void CreateAndHideWidget(TSubclassOf<UUserWidget>& Widget, UUserWidget* UserWidget);
+	UUserWidget* CreateAndHideWidget(TSubclassOf<UUserWidget>& Widget, UUserWidget* UserWidget, bool canAllign = false);
 
 	void DisplayWidget(UUserWidget* Widget, bool& isVisible);
 
@@ -88,4 +88,5 @@ public:
 
 	void HidePauseMenu();
 
+	void TogglePauseMenu();
 };

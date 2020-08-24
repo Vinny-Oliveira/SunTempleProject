@@ -127,6 +127,9 @@ public:
 
 	/** Boolean to check if the left mouse button is being pressed */
 	bool bLeftMouseBtnDown{};
+	
+	/** Boolean to check if the Escape key is being pressed */
+	bool bEscDown{};
 
 #pragma endregion
 
@@ -313,6 +316,16 @@ public:
 	/// Call actions for when the left mouse button is released
 	/// </summary>
 	void LeftMouseBtnUp();
+	
+	/// <summary>
+	/// Call actions for when the Escape key is pressed
+	/// </summary>
+	void EscDown();
+	
+	/// <summary>
+	/// Call actions for when the Escape key is released
+	/// </summary>
+	void EscUp();
 
 #pragma endregion
 

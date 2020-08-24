@@ -31,6 +31,7 @@ AMain::AMain()
 	SprintingSpeed{ 950.f },
 	bShiftKeyDown{ false },
 	bLeftMouseBtnDown{ false },
+	bEscDown{ false },
 	bIsAttacking{ false },
 	MovementStatus{ EMovementStatus::EMS_Normal },
 	StaminaStatus{ EStaminaStatus::ESS_Normal },
@@ -116,10 +117,13 @@ void AMain::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AMain::ShiftKeyDown);
 	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AMain::ShiftKeyUp);
 	
-	// Bind sprint
+	// Bind left mouse button
 	PlayerInputComponent->BindAction("LeftMouseBtn", IE_Pressed, this, &AMain::LeftMouseBtnDown);
 	PlayerInputComponent->BindAction("LeftMouseBtn", IE_Released, this, &AMain::LeftMouseBtnUp);
 
+	// Bind Escape
+	PlayerInputComponent->BindAction("ESC", IE_Pressed, this, &AMain::EscDown);
+	PlayerInputComponent->BindAction("ESC", IE_Released, this, &AMain::EscUp);
 
 }
 
@@ -313,6 +317,18 @@ void AMain::LeftMouseBtnDown() {
 
 void AMain::LeftMouseBtnUp() {
 	bLeftMouseBtnDown = false;
+}
+
+void AMain::EscDown() {
+	bEscDown = true;
+
+	if (MainPlayerController) {
+		MainPlayerController->TogglePauseMenu();
+	}
+}
+
+void AMain::EscUp() {
+	bEscDown = false;
 }
 
 void AMain::SetEquippedWeapon(AWeapon* WeaponToSet) { 

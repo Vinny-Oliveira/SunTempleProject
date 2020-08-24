@@ -16,18 +16,10 @@ void AMainPlayerController::BeginPlay() {
 	HUDOverlay->SetVisibility(ESlateVisibility::Visible);
 
 	// Enemy health bar
-	if (WEnemyHealthBar) {
-		CreateAndHideWidget(WEnemyHealthBar, EnemyHealthBar);
-
-		// Make the health bar flat on the screen
-		FVector2D Allignment(0.f, 0.f);
-		EnemyHealthBar->SetAlignmentInViewport(Allignment);
-	}
+	EnemyHealthBar = CreateAndHideWidget(WEnemyHealthBar, EnemyHealthBar, true); // Make the health bar flat on the screen
 	
 	// Pause Menu
-	if (WPauseMenu) {
-		CreateAndHideWidget(WPauseMenu, PauseMenu);
-	}
+	PauseMenu = CreateAndHideWidget(WPauseMenu, PauseMenu);
 
 }
 
@@ -47,12 +39,25 @@ void AMainPlayerController::Tick(float DeltaTime) {
 	}
 }
 
-void AMainPlayerController::CreateAndHideWidget(TSubclassOf<UUserWidget>& Widget, UUserWidget* UserWidget) {
-	UserWidget = CreateWidget<UUserWidget>(this, Widget);
-	if (UserWidget) {
-		UserWidget->AddToViewport();
-		UserWidget->SetVisibility(ESlateVisibility::Hidden);
+UUserWidget* AMainPlayerController::CreateAndHideWidget(TSubclassOf<UUserWidget>& Widget, UUserWidget* UserWidget, bool canAllign) {
+	if (Widget) {
+		UserWidget = CreateWidget<UUserWidget>(this, Widget);
+
+		if (UserWidget) {
+			UserWidget->AddToViewport();
+			UserWidget->SetVisibility(ESlateVisibility::Hidden);
+
+			if (canAllign) {
+				// Make the widget flat on the screen
+				FVector2D Allignment(0.f, 0.f);
+				UserWidget->SetAlignmentInViewport(Allignment);
+			}
+
+			return UserWidget;
+		}
 	}
+
+	return nullptr;
 }
 
 void AMainPlayerController::DisplayWidget(UUserWidget* Widget, bool& isVisible) {
@@ -74,7 +79,7 @@ void AMainPlayerController::DisplayEnemyHealthBar() {
 }
 
 void AMainPlayerController::HideEnemyHealthBar() {
-	HideWidget(PauseMenu, bEnemyHealthBarVisible);
+	HideWidget(EnemyHealthBar, bEnemyHealthBarVisible);
 }
 
 void AMainPlayerController::DisplayPauseMenu() {
@@ -83,4 +88,8 @@ void AMainPlayerController::DisplayPauseMenu() {
 
 void AMainPlayerController::HidePauseMenu() {
 	HideWidget(PauseMenu, bPauseMenuVisible);
+}
+
+void AMainPlayerController::TogglePauseMenu() {
+	(bPauseMenuVisible) ? (HidePauseMenu()) : (DisplayPauseMenu());
 }
