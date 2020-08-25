@@ -34,6 +34,9 @@ struct FCharacterStats {
 
 	UPROPERTY(EditDefaultsOnly, Category = "SaveData")
 	FString WeaponName{};
+	
+	UPROPERTY(EditDefaultsOnly, Category = "SaveData")
+	FString LevelName{};
 
 };
 

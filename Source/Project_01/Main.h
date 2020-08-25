@@ -445,7 +445,7 @@ public:
 	void SaveGame();
 	
 	//UFUNCTION(BlueprintCallable)
-	void LoadGame();
+	class USaveGameProj01* LoadGame();
 
 	UFUNCTION(BlueprintCallable)
 	void LoadGame(bool CanSetPosition);

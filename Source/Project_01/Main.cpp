@@ -470,9 +470,11 @@ void AMain::SwitchLevel(FName LevelName) {
 	// Only switch level if the transition is not to the current level
 	if (World) {
 		FString FS_CurrentLevel{ World->GetMapName() };
+		FS_CurrentLevel.RemoveFromStart(GetWorld()->StreamingLevelsPrefix);
 		FName FN_CurrentLevel(*FS_CurrentLevel); // Initialize the FName with a de-referenced FString, which is equivalent to a C string
 
 		if (FN_CurrentLevel != LevelName) {
+			UE_LOG(LogTemp, Warning, TEXT("Switch"));
 			UGameplayStatics::OpenLevel(World, LevelName);
 		}
 
@@ -492,6 +494,11 @@ void AMain::SaveGame() {
 	SaveGameInstance->CharacterStats.Coins = Coins;
 	SaveGameInstance->CharacterStats.Location = GetActorLocation();
 	SaveGameInstance->CharacterStats.Rotation = GetActorRotation();
+	
+	// Save the name of the current level
+	FString MapName{ GetWorld()->GetMapName() };
+	MapName.RemoveFromStart(GetWorld()->StreamingLevelsPrefix);
+	SaveGameInstance->CharacterStats.LevelName = MapName;
 
 	// Save the equipped weapon
 	if (EquippedWeapon) {
@@ -502,7 +509,7 @@ void AMain::SaveGame() {
 	UGameplayStatics::SaveGameToSlot(SaveGameInstance, SaveGameInstance->PlayerName, SaveGameInstance->UserIndex);
 }
 
-void AMain::LoadGame() {
+USaveGameProj01* AMain::LoadGame() {
 	// Create a pointer to a save game object
 	USaveGame* LoadGame{ UGameplayStatics::CreateSaveGameObject(USaveGameProj01::StaticClass()) };
 	USaveGameProj01* LoadGameInstance{ Cast<USaveGameProj01>(LoadGame) };
@@ -543,11 +550,23 @@ void AMain::LoadGame() {
 
 		}
 	}
+	//UE_LOG(LogTemp, Warning, TEXT("Begin Play"));
+	return LoadGameInstance;
 }
 
 void AMain::LoadGame(bool CanSetPosition) {
-	//if (CanSetPosition) {
-	//	SetActorLocation(LoadGameInstance->CharacterStats.Location);
-	//	SetActorRotation(LoadGameInstance->CharacterStats.Rotation);
-	//}
+	USaveGameProj01* LoadGameInstance{ LoadGame() };
+
+	// Reset position
+	if (CanSetPosition) {
+		/*UE_LOG(LogTemp, Warning, TEXT("Reset Position"));*/
+		SetActorLocation(LoadGameInstance->CharacterStats.Location);
+		SetActorRotation(LoadGameInstance->CharacterStats.Rotation);
+	}
+
+	// Go to the saved level
+	if (LoadGameInstance->CharacterStats.LevelName != TEXT("")) {
+		FName LevelName( *(LoadGameInstance->CharacterStats.LevelName) );
+		SwitchLevel(LevelName);
+	}
 }
