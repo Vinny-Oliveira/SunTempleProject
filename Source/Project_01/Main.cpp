@@ -121,9 +121,9 @@ void AMain::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("LeftMouseBtn", IE_Pressed, this, &AMain::LeftMouseBtnDown);
 	PlayerInputComponent->BindAction("LeftMouseBtn", IE_Released, this, &AMain::LeftMouseBtnUp);
 
-	// Bind Escape
-	PlayerInputComponent->BindAction("ESC", IE_Pressed, this, &AMain::EscDown);
-	PlayerInputComponent->BindAction("ESC", IE_Released, this, &AMain::EscUp);
+	// Bind Escape and make sure you can use this input when the game is paused
+	PlayerInputComponent->BindAction("ESC", IE_Pressed, this, &AMain::EscDown).bExecuteWhenPaused = true;
+	PlayerInputComponent->BindAction("ESC", IE_Released, this, &AMain::EscUp).bExecuteWhenPaused = true;
 
 }
 
