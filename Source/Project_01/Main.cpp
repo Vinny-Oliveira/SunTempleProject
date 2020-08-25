@@ -158,7 +158,7 @@ void AMain::LookUpAtRate(float Rate) {
 void AMain::Die() {
 	UAnimInstance* AnimInstance{ GetMesh()->GetAnimInstance() };
 	// Play death animation
-	if (AnimInstance && CombatMontage) {
+	if (AnimInstance && CombatMontage && IsAlive()) {
 		AnimInstance->Montage_Play(CombatMontage, 1.f);
 		AnimInstance->Montage_JumpToSection(FName("Death"), CombatMontage);
 	}
@@ -519,6 +519,15 @@ void AMain::LoadGame(bool CanSetPosition) {
 	if (CanSetPosition) {
 		SetActorLocation(LoadGameInstance->CharacterStats.Location);
 		SetActorRotation(LoadGameInstance->CharacterStats.Rotation);
+	}
+
+	// Load the character alive or dead depending on the state it was when saved
+	SetMovementStatus(EMovementStatus::EMS_Normal);
+	if (Health > 0) {
+		GetMesh()->bPauseAnims = false;
+		GetMesh()->bNoSkeletonUpdate = false;
+	} else {
+		Die();
 	}
 
 	// Spawn and equip the loaded weapon
