@@ -78,6 +78,9 @@ void AMain::BeginPlay()
 	MainPlayerController = Cast<AMainPlayerController>(GetController());
 
 	LoadGame();
+	if (MainPlayerController) {
+		MainPlayerController->HidePauseMenu();
+	}
 }
 
 // Called every frame
@@ -474,7 +477,6 @@ void AMain::SwitchLevel(FName LevelName) {
 		FName FN_CurrentLevel(*FS_CurrentLevel); // Initialize the FName with a de-referenced FString, which is equivalent to a C string
 
 		if (FN_CurrentLevel != LevelName) {
-			UE_LOG(LogTemp, Warning, TEXT("Switch"));
 			UGameplayStatics::OpenLevel(World, LevelName);
 		}
 
@@ -550,7 +552,7 @@ USaveGameProj01* AMain::LoadGame() {
 
 		}
 	}
-	//UE_LOG(LogTemp, Warning, TEXT("Begin Play"));
+	
 	return LoadGameInstance;
 }
 
@@ -559,7 +561,6 @@ void AMain::LoadGame(bool CanSetPosition) {
 
 	// Reset position
 	if (CanSetPosition) {
-		/*UE_LOG(LogTemp, Warning, TEXT("Reset Position"));*/
 		SetActorLocation(LoadGameInstance->CharacterStats.Location);
 		SetActorRotation(LoadGameInstance->CharacterStats.Rotation);
 	}

@@ -444,9 +444,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SaveGame();
 	
-	//UFUNCTION(BlueprintCallable)
 	class USaveGameProj01* LoadGame();
 
+	// Load the game, reset the character's position, and reload the saved level
 	UFUNCTION(BlueprintCallable)
 	void LoadGame(bool CanSetPosition);
 
