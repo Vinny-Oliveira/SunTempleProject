@@ -91,5 +91,5 @@ void AMainPlayerController::HidePauseMenu_Implementation() {
 }
 
 void AMainPlayerController::TogglePauseMenu() {
-	(bPauseMenuVisible) ? (HidePauseMenu_Implementation()) : (DisplayPauseMenu_Implementation());
+	(bPauseMenuVisible) ? (HidePauseMenu()) : (DisplayPauseMenu());
 }
