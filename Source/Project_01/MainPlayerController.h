@@ -84,8 +84,10 @@ public:
 
 	void HideEnemyHealthBar();
 	
+	UFUNCTION(BlueprintNativeEvent, Category = "HUD")
 	void DisplayPauseMenu();
 
+	UFUNCTION(BlueprintNativeEvent, Category = "HUD")
 	void HidePauseMenu();
 
 	void TogglePauseMenu();

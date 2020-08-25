@@ -82,14 +82,14 @@ void AMainPlayerController::HideEnemyHealthBar() {
 	HideWidget(EnemyHealthBar, bEnemyHealthBarVisible);
 }
 
-void AMainPlayerController::DisplayPauseMenu() {
+void AMainPlayerController::DisplayPauseMenu_Implementation() {
 	DisplayWidget(PauseMenu, bPauseMenuVisible);
 }
 
-void AMainPlayerController::HidePauseMenu() {
+void AMainPlayerController::HidePauseMenu_Implementation() {
 	HideWidget(PauseMenu, bPauseMenuVisible);
 }
 
 void AMainPlayerController::TogglePauseMenu() {
-	(bPauseMenuVisible) ? (HidePauseMenu()) : (DisplayPauseMenu());
+	(bPauseMenuVisible) ? (HidePauseMenu_Implementation()) : (DisplayPauseMenu_Implementation());
 }
