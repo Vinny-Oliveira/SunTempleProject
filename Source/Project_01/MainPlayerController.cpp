@@ -84,6 +84,14 @@ void AMainPlayerController::HideEnemyHealthBar() {
 
 void AMainPlayerController::DisplayPauseMenu_Implementation() {
 	DisplayWidget(PauseMenu, bPauseMenuVisible);
+
+	// Get the mouse cursor back
+	//FInputModeUIOnly InputModeUIOnly{}; // All inputs are UI only, so the player cannot control the character
+										// But this voids inputs that turn the menu off
+	FInputModeGameAndUI InputModeGameAndUI{};
+	
+	SetInputMode(InputModeGameAndUI);
+	bShowMouseCursor = true;
 }
 
 void AMainPlayerController::HidePauseMenu_Implementation() {
@@ -91,5 +99,5 @@ void AMainPlayerController::HidePauseMenu_Implementation() {
 }
 
 void AMainPlayerController::TogglePauseMenu() {
-	(bPauseMenuVisible) ? (HidePauseMenu()) : (DisplayPauseMenu());
+	(bPauseMenuVisible) ? (HidePauseMenu()) : (DisplayPauseMenu()); // These are the BP versions
 }
