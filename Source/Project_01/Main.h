@@ -443,6 +443,9 @@ public:
 #pragma region SAVE_LOAD_GAME
 	UFUNCTION(BlueprintCallable)
 	void SaveGame();
+	
+	//UFUNCTION(BlueprintCallable)
+	void LoadGame();
 
 	UFUNCTION(BlueprintCallable)
 	void LoadGame(bool CanSetPosition);

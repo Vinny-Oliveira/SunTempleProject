@@ -76,6 +76,8 @@ void AMain::BeginPlay()
 	Super::BeginPlay();
 	
 	MainPlayerController = Cast<AMainPlayerController>(GetController());
+
+	LoadGame();
 }
 
 // Called every frame
@@ -500,7 +502,7 @@ void AMain::SaveGame() {
 	UGameplayStatics::SaveGameToSlot(SaveGameInstance, SaveGameInstance->PlayerName, SaveGameInstance->UserIndex);
 }
 
-void AMain::LoadGame(bool CanSetPosition) {
+void AMain::LoadGame() {
 	// Create a pointer to a save game object
 	USaveGame* LoadGame{ UGameplayStatics::CreateSaveGameObject(USaveGameProj01::StaticClass()) };
 	USaveGameProj01* LoadGameInstance{ Cast<USaveGameProj01>(LoadGame) };
@@ -516,11 +518,6 @@ void AMain::LoadGame(bool CanSetPosition) {
 	MaxStamina = LoadGameInstance->CharacterStats.MaxStamina;
 	Coins = LoadGameInstance->CharacterStats.Coins;
 	
-	if (CanSetPosition) {
-		SetActorLocation(LoadGameInstance->CharacterStats.Location);
-		SetActorRotation(LoadGameInstance->CharacterStats.Rotation);
-	}
-
 	// Load the character alive or dead depending on the state it was when saved
 	SetMovementStatus(EMovementStatus::EMS_Normal);
 	if (Health > 0) {
@@ -548,3 +545,9 @@ void AMain::LoadGame(bool CanSetPosition) {
 	}
 }
 
+void AMain::LoadGame(bool CanSetPosition) {
+	//if (CanSetPosition) {
+	//	SetActorLocation(LoadGameInstance->CharacterStats.Location);
+	//	SetActorRotation(LoadGameInstance->CharacterStats.Rotation);
+	//}
+}
