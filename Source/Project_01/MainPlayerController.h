@@ -78,6 +78,8 @@ private:
 	void DisplayWidget(UUserWidget* Widget, bool& isVisible);
 
 	void HideWidget(UUserWidget* Widget, bool& isVisible);
+
+	void SetPauseMenuInput(const FInputModeDataBase& InData, bool canSeeCursor);
 public:
 
 	void DisplayEnemyHealthBar();

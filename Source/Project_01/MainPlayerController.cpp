@@ -74,6 +74,13 @@ void AMainPlayerController::HideWidget(UUserWidget* Widget, bool& isVisible) {
 	}
 }
 
+void AMainPlayerController::SetPauseMenuInput(const FInputModeDataBase& InData, bool canSeeCursor) {
+	if (PauseMenu) {
+		SetInputMode(InData);
+		bShowMouseCursor = canSeeCursor;
+	}
+}
+
 void AMainPlayerController::DisplayEnemyHealthBar() {
 	DisplayWidget(EnemyHealthBar, bEnemyHealthBarVisible);
 }
@@ -87,15 +94,17 @@ void AMainPlayerController::DisplayPauseMenu_Implementation() {
 
 	// Get the mouse cursor back
 	//FInputModeUIOnly InputModeUIOnly{}; // All inputs are UI only, so the player cannot control the character
-										// But this voids inputs that turn the menu off
-	FInputModeGameAndUI InputModeGameAndUI{};
-	
-	SetInputMode(InputModeGameAndUI);
-	bShowMouseCursor = true;
+	//									// But this voids inputs that turn the menu off
+	FInputModeGameAndUI InputModeGameAndUI;
+	SetPauseMenuInput(InputModeGameAndUI, true);
 }
 
 void AMainPlayerController::HidePauseMenu_Implementation() {
 	HideWidget(PauseMenu, bPauseMenuVisible);
+
+	// Hide the mouse cursor
+	FInputModeGameOnly InputModeGameOnly;
+	SetPauseMenuInput(InputModeGameOnly, false);
 }
 
 void AMainPlayerController::TogglePauseMenu() {
