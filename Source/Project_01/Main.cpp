@@ -477,6 +477,7 @@ void AMain::SwitchLevel(FName LevelName) {
 		FName FN_CurrentLevel(*FS_CurrentLevel); // Initialize the FName with a de-referenced FString, which is equivalent to a C string
 
 		if (FN_CurrentLevel != LevelName) {
+			SaveGame();
 			UGameplayStatics::OpenLevel(World, LevelName);
 		}
 
@@ -503,9 +504,7 @@ void AMain::SaveGame() {
 	SaveGameInstance->CharacterStats.LevelName = MapName;
 
 	// Save the equipped weapon
-	if (EquippedWeapon) {
-		SaveGameInstance->CharacterStats.WeaponName = EquippedWeapon->Name;
-	}
+	SaveWeapon(SaveGameInstance);
 
 	// Save the information to a save slot
 	UGameplayStatics::SaveGameToSlot(SaveGameInstance, SaveGameInstance->PlayerName, SaveGameInstance->UserIndex);
@@ -537,21 +536,7 @@ USaveGameProj01* AMain::LoadGame() {
 	}
 
 	// Spawn and equip the loaded weapon
-	if (WeaponStorage) {
-		AItemStorage* Weapons = GetWorld()->SpawnActor<AItemStorage>(WeaponStorage);
-		if (Weapons) {
-			FString WeaponName{ LoadGameInstance->CharacterStats.WeaponName };
-
-			// Only equip the weapon if it exists in the storage
-			if (Weapons->WeaponMap.Contains(WeaponName)) {
-				AWeapon* WeaponToEquip{ GetWorld()->SpawnActor<AWeapon>(Weapons->WeaponMap[WeaponName]) };
-				if (WeaponToEquip) {
-					WeaponToEquip->Equip(this);
-				}
-			}
-
-		}
-	}
+	LoadWeapon(LoadGameInstance);
 	
 	return LoadGameInstance;
 }
@@ -571,3 +556,52 @@ void AMain::LoadGame(bool CanSetPosition) {
 		SwitchLevel(LevelName);
 	}
 }
+
+void AMain::SaveWeapon() {
+	// Create a pointer to a save game object
+	USaveGame* SaveGame{ UGameplayStatics::CreateSaveGameObject(USaveGameProj01::StaticClass()) };
+	USaveGameProj01* SaveGameInstance{ Cast<USaveGameProj01>(SaveGame) };
+
+	//// The SaveGame object is loaded and overwrites the previous objects
+	//SaveGame = UGameplayStatics::LoadGameFromSlot(SaveGameInstance->PlayerName, SaveGameInstance->UserIndex);
+	//SaveGameInstance = Cast<USaveGameProj01>(SaveGame);
+
+	// Save the equipped weapon
+	SaveWeapon(SaveGameInstance);
+}
+
+void AMain::SaveWeapon(USaveGameProj01* SaveGameInstance) {
+	if (EquippedWeapon) {
+		SaveGameInstance->CharacterStats.WeaponName = EquippedWeapon->Name;
+	}
+}
+
+//void AMain::LoadWeapon() {
+//	USaveGame* LoadGame{ UGameplayStatics::CreateSaveGameObject(USaveGameProj01::StaticClass()) };
+//	USaveGameProj01* LoadGameInstance{ Cast<USaveGameProj01>(LoadGame) };
+//
+//	// The SaveGame object is loaded and overwrites the previous objects
+//	LoadGame = UGameplayStatics::LoadGameFromSlot(LoadGameInstance->PlayerName, LoadGameInstance->UserIndex);
+//	LoadGameInstance = Cast<USaveGameProj01>(LoadGame);
+//
+//	LoadWeapon(LoadGameInstance);
+//}
+
+void AMain::LoadWeapon(USaveGameProj01* LoadGameInstance) {
+	if (WeaponStorage) {
+		AItemStorage* Weapons = GetWorld()->SpawnActor<AItemStorage>(WeaponStorage);
+		if (Weapons) {
+			FString WeaponName{ LoadGameInstance->CharacterStats.WeaponName };
+
+			// Only equip the weapon if it exists in the storage
+			if (Weapons->WeaponMap.Contains(WeaponName)) {
+				AWeapon* WeaponToEquip{ GetWorld()->SpawnActor<AWeapon>(Weapons->WeaponMap[WeaponName]) };
+				if (WeaponToEquip) {
+					WeaponToEquip->Equip(this);
+				}
+			}
+
+		}
+	}
+}
+

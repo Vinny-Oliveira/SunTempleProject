@@ -178,14 +178,14 @@ void AEnemy::MoveToTarget(AMain* Target) {
 
 		AIController->MoveTo(MoveRequest, &NavPath);
 
-		/** Display the path taken by the enemy */
-		//TArray<FNavPathPoint> PathPoints{ NavPath->GetPathPoints() };
-		auto PathPoints{ NavPath->GetPathPoints() };
+		///** Display the path taken by the enemy */
+		////TArray<FNavPathPoint> PathPoints{ NavPath->GetPathPoints() };
+		//auto PathPoints{ NavPath->GetPathPoints() };
 
-		for (auto Point : PathPoints) {
-			FVector Location = Point.Location;
-			UKismetSystemLibrary::DrawDebugSphere(this, Location, 25.f, 12, FLinearColor::Red, 5.f, 2.f);
-		}
+		//for (auto Point : PathPoints) {
+		//	FVector Location = Point.Location;
+		//	UKismetSystemLibrary::DrawDebugSphere(this, Location, 25.f, 12, FLinearColor::Red, 5.f, 2.f);
+		//}
 	}
 }
 
