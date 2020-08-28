@@ -450,10 +450,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void LoadGame(bool CanSetPosition);
 
-	void SaveWeapon();
 	void SaveWeapon(USaveGameProj01* SaveGameInstance);
 
-	//void LoadWeapon();
 	void LoadWeapon(USaveGameProj01* LoadGameInstance);
 
 #pragma endregion

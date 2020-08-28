@@ -557,35 +557,11 @@ void AMain::LoadGame(bool CanSetPosition) {
 	}
 }
 
-void AMain::SaveWeapon() {
-	// Create a pointer to a save game object
-	USaveGame* SaveGame{ UGameplayStatics::CreateSaveGameObject(USaveGameProj01::StaticClass()) };
-	USaveGameProj01* SaveGameInstance{ Cast<USaveGameProj01>(SaveGame) };
-
-	//// The SaveGame object is loaded and overwrites the previous objects
-	//SaveGame = UGameplayStatics::LoadGameFromSlot(SaveGameInstance->PlayerName, SaveGameInstance->UserIndex);
-	//SaveGameInstance = Cast<USaveGameProj01>(SaveGame);
-
-	// Save the equipped weapon
-	SaveWeapon(SaveGameInstance);
-}
-
 void AMain::SaveWeapon(USaveGameProj01* SaveGameInstance) {
 	if (EquippedWeapon) {
 		SaveGameInstance->CharacterStats.WeaponName = EquippedWeapon->Name;
 	}
 }
-
-//void AMain::LoadWeapon() {
-//	USaveGame* LoadGame{ UGameplayStatics::CreateSaveGameObject(USaveGameProj01::StaticClass()) };
-//	USaveGameProj01* LoadGameInstance{ Cast<USaveGameProj01>(LoadGame) };
-//
-//	// The SaveGame object is loaded and overwrites the previous objects
-//	LoadGame = UGameplayStatics::LoadGameFromSlot(LoadGameInstance->PlayerName, LoadGameInstance->UserIndex);
-//	LoadGameInstance = Cast<USaveGameProj01>(LoadGame);
-//
-//	LoadWeapon(LoadGameInstance);
-//}
 
 void AMain::LoadWeapon(USaveGameProj01* LoadGameInstance) {
 	if (WeaponStorage) {
