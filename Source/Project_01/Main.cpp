@@ -40,7 +40,7 @@ AMain::AMain()
 	InterpSpeed{ 15.f },
 	bInterpingToEnemy{ false } {
 
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Create Camera Boom (pulls towards the player if there is a collision)
@@ -74,7 +74,7 @@ AMain::AMain()
 void AMain::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	MainPlayerController = Cast<AMainPlayerController>(GetController());
 
 	LoadGame();
@@ -105,7 +105,7 @@ void AMain::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	// Bind movement
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMain::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMain::MoveRight);
-	
+
 	// Bind turns
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
@@ -117,11 +117,11 @@ void AMain::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	// Bind jump
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMain::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
-	
+
 	// Bind sprint
 	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AMain::ShiftKeyDown);
 	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AMain::ShiftKeyUp);
-	
+
 	// Bind left mouse button
 	PlayerInputComponent->BindAction("LeftMouseBtn", IE_Pressed, this, &AMain::LeftMouseBtnDown);
 	PlayerInputComponent->BindAction("LeftMouseBtn", IE_Released, this, &AMain::LeftMouseBtnUp);
@@ -182,7 +182,7 @@ void AMain::DecrementHealth(float Amount) {
 	if (!IsAlive()) {
 		return;
 	}
-	
+
 	Health -= Amount;
 
 	// Check if the character dies
@@ -299,7 +299,7 @@ void AMain::ShowPickupLocations() {
 	for (auto Location : PickupLocations) {
 		UKismetSystemLibrary::DrawDebugSphere(this, Location, 25.f, 12, FLinearColor::Red, 5.f, 2.f);
 	}
-	
+
 }
 
 void AMain::LeftMouseBtnDown() {
@@ -315,7 +315,7 @@ void AMain::LeftMouseBtnDown() {
 			Weapon->Equip(this);
 			SetActiveOverlappingItem(nullptr);
 		}
-	} else if (EquippedWeapon) { 
+	} else if (EquippedWeapon) {
 		Attack();
 	}
 }
@@ -336,11 +336,11 @@ void AMain::EscUp() {
 	bEscDown = false;
 }
 
-void AMain::SetEquippedWeapon(AWeapon* WeaponToSet) { 
+void AMain::SetEquippedWeapon(AWeapon* WeaponToSet) {
 	if (EquippedWeapon) {
 		EquippedWeapon->Destroy();
 	}
-	
+
 	EquippedWeapon = WeaponToSet;
 }
 
@@ -497,7 +497,7 @@ void AMain::SaveGame() {
 	SaveGameInstance->CharacterStats.Coins = Coins;
 	SaveGameInstance->CharacterStats.Location = GetActorLocation();
 	SaveGameInstance->CharacterStats.Rotation = GetActorRotation();
-	
+
 	// Save the name of the current level
 	FString MapName{ GetWorld()->GetMapName() };
 	MapName.RemoveFromStart(GetWorld()->StreamingLevelsPrefix);
@@ -517,6 +517,11 @@ USaveGameProj01* AMain::LoadGame() {
 
 	// The SaveGame object is loaded and overwrites the previous objects
 	LoadGame = UGameplayStatics::LoadGameFromSlot(LoadGameInstance->PlayerName, LoadGameInstance->UserIndex);
+
+	if (LoadGame == nullptr) {
+		return nullptr;
+	}
+
 	LoadGameInstance = Cast<USaveGameProj01>(LoadGame);
 
 	// Load the stats into the player
@@ -525,7 +530,7 @@ USaveGameProj01* AMain::LoadGame() {
 	Stamina = LoadGameInstance->CharacterStats.Stamina;
 	MaxStamina = LoadGameInstance->CharacterStats.MaxStamina;
 	Coins = LoadGameInstance->CharacterStats.Coins;
-	
+
 	// Load the character alive or dead depending on the state it was when saved
 	SetMovementStatus(EMovementStatus::EMS_Normal);
 	if (Health > 0) {
@@ -537,12 +542,16 @@ USaveGameProj01* AMain::LoadGame() {
 
 	// Spawn and equip the loaded weapon
 	LoadWeapon(LoadGameInstance);
-	
+
 	return LoadGameInstance;
 }
 
 void AMain::LoadGame(bool CanSetPosition) {
 	USaveGameProj01* LoadGameInstance{ LoadGame() };
+
+	if (LoadGameInstance == nullptr) {
+		return;
+	}
 
 	// Reset position
 	if (CanSetPosition) {
@@ -552,7 +561,7 @@ void AMain::LoadGame(bool CanSetPosition) {
 
 	// Go to the saved level
 	if (LoadGameInstance->CharacterStats.LevelName != TEXT("")) {
-		FName LevelName( *(LoadGameInstance->CharacterStats.LevelName) );
+		FName LevelName(*(LoadGameInstance->CharacterStats.LevelName));
 		SwitchLevel(LevelName);
 	}
 }
